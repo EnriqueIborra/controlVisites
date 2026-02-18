@@ -24,3 +24,50 @@ body::before {
   z-index: -1;
 }
 
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Contenidor principal */
+.container {
+  max-width: 500px;
+  margin: auto;
+}
+
+/* Botons més grans per a mòbil */
+button {
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Taula responsive */
+table {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 10px;
+  word-break: break-word;
+}
+
+/* Reader adaptable */
+#reader {
+  width: 100% !important;
+  max-width: 400px;
+  margin: 20px auto;
+}

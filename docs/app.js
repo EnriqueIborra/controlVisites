@@ -5,27 +5,26 @@ function startScanner() {
   return new Promise((resolve, reject) => {
     const html5QrCode = new Html5Qrcode("reader");
 
-    Html5Qrcode.getCameras()
-      .then(devices => {
-        if (devices && devices.length) {
-          const cameraId = devices[0].id;
-
-          html5QrCode.start(
-            cameraId,
-            { fps: 10, qrbox: 250 },
-            qrCodeMessage => {
-              html5QrCode.stop().then(() => {
-                resolve(qrCodeMessage);
-              });
-            }
-          );
-        } else {
-          reject("No hi ha càmera");
-        }
-      })
-      .catch(err => reject(err));
+    html5QrCode.start(
+      { facingMode: "environment" }, // 👈 càmera trasera
+      {
+        fps: 10,
+        qrbox: { width: 250, height: 250 }
+      },
+      qrCodeMessage => {
+        html5QrCode.stop().then(() => {
+          resolve(qrCodeMessage);
+        });
+      },
+      errorMessage => {
+        // ignorar errors de lectura
+      }
+    ).catch(err => {
+      reject("Error accedint a la càmera: " + err);
+    });
   });
 }
+
 
 function afegirFilaTaula(codi1, codi2) {
   const table = document
