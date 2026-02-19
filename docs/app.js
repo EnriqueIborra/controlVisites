@@ -1,7 +1,7 @@
 let qr1 = null;
 let qr2 = null;
 
-function startScanner() {
+/* function startScanner() {
   return new Promise((resolve, reject) => {
     const html5QrCode = new Html5Qrcode("reader");
 
@@ -25,7 +25,56 @@ function startScanner() {
       })
       .catch(err => reject(err));
   });
+} */
+
+function startScanner() {
+  return new Promise((resolve, reject) => {
+    const html5QrCode = new Html5Qrcode("reader");
+
+    Html5Qrcode.getCameras()
+      .then(devices => {
+
+        if (!devices || devices.length === 0) {
+          reject("No hi ha càmera");
+          return;
+        }
+
+        // 🔍 Intentem trobar la càmera trasera pel nom
+        let backCamera = devices.find(device =>
+          device.label.toLowerCase().includes("back") ||
+          device.label.toLowerCase().includes("rear") ||
+          device.label.toLowerCase().includes("environment")
+        );
+
+        // 📱 En iPhone sovint l'última és la trasera
+        const cameraId = backCamera
+          ? backCamera.id
+          : devices[devices.length - 1].id;
+
+        html5QrCode.start(
+          cameraId,
+          {
+            fps: 15,
+            qrbox: 260
+          },
+          qrCodeMessage => {
+            html5QrCode.stop().then(() => {
+              resolve(qrCodeMessage);
+            });
+          },
+          errorMessage => {
+            // ignorar errors de lectura
+          }
+        ).catch(err => {
+          reject("Error iniciant càmera: " + err);
+        });
+
+      })
+      .catch(err => reject("Error obtenint càmeres: " + err));
+  });
 }
+
+
 
 function afegirFilaTaula(codi1, codi2) {
   const table = document
