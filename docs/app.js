@@ -97,35 +97,7 @@ async function switchCamera() {
   }
 }
 
-
 /* ---------- TAULA ---------- */
-
-/* function afegirFilaTaula(codi1, codi2) {
-  const table = document
-    .getElementById("resultTable")
-    .querySelector("tbody");
-
-  const novaFila = document.createElement("tr");
-
-  const cell1 = document.createElement("td");
-  const cell2 = document.createElement("td");
-  const cell3 = document.createElement("td");
-
-  cell1.textContent = codi1;
-  cell2.textContent = codi2;
-
-  const ara = new Date();
-  cell3.textContent = ara.toLocaleString();
-
-  novaFila.appendChild(cell1);
-  novaFila.appendChild(cell2);
-  novaFila.appendChild(cell3);
-
-  table.appendChild(novaFila);
-    novaFila.scrollIntoView({ behavior: "smooth", block: "end" });
-}
- */
-
 function afegirFilaTaula(codi1, codi2) {
   const tableBody = document.getElementById("resultTable").querySelector("tbody");
   const novaFila = document.createElement("tr");
@@ -142,7 +114,7 @@ function afegirFilaTaula(codi1, codi2) {
 
   // Botó esborrar
   const btnEsborrar = document.createElement("button");
-  btnEsborrar.textContent = "Esborrar";
+  btnEsborrar.textContent = "Acaba";
   btnEsborrar.style.backgroundColor = "#f44336"; // vermell
   btnEsborrar.style.color = "white";
   btnEsborrar.style.border = "none";
@@ -170,10 +142,7 @@ function afegirFilaTaula(codi1, codi2) {
   novaFila.scrollIntoView({ behavior: "smooth", block: "end" });
 }
 
-
-
 /* ---------- BOTONS ---------- */
-
 // Botó 1
 document.getElementById("scanBtn1").addEventListener("click", async () => {
   try {
