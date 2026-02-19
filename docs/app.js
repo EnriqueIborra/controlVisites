@@ -115,7 +115,7 @@ function afegirFilaTaula(codi1, codi2) {
   // Botó esborrar
   const btnEsborrar = document.createElement("button");
   btnEsborrar.textContent = "Acaba";
-  btnEsborrar.style.backgroundColor = "#f44336"; // vermell
+  btnEsborrar.style.backgroundColor = "#107732"; // vermell
   btnEsborrar.style.color = "white";
   btnEsborrar.style.border = "none";
   btnEsborrar.style.padding = "5px 10px";
