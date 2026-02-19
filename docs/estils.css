@@ -65,10 +65,10 @@ th, td {
   word-break: break-word;
 }
 
-/* Reader adaptable */
+
 #reader {
   width: 100% !important;
-  max-width: 500px;
+  height: 60vh;
+  max-width: none;
   margin: 20px auto;
 }
-

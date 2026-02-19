@@ -1,35 +1,47 @@
 let qr1 = null;
 let qr2 = null;
 
+
 function startScanner() {
   return new Promise((resolve, reject) => {
 
-    const html5QrCode = new Html5Qrcode("reader");
+    const readerId = "reader";
+    const html5QrCode = new Html5Qrcode(readerId);
 
-    html5QrCode.start(
-      { facingMode: "environment" }, // només això
-      {
-        fps: 15,
-        qrbox: 280
-      },
-      qrCodeMessage => {
-        html5QrCode.stop().then(() => {
-          navigator.vibrate?.(200);
-          resolve(qrCodeMessage);
+    Html5Qrcode.getCameras()
+      .then(cameras => {
+        if (!cameras || cameras.length === 0) {
+          reject("No hi ha càmeres");
+          return;
+        }
+
+        // 🔍 iPhone: normalment l’última és la trasera
+        const cameraId = cameras[cameras.length - 1].id;
+
+        html5QrCode.start(
+          cameraId,
+          {
+            fps: 15,
+            qrbox: 260
+          },
+          qrCodeMessage => {
+            html5QrCode.stop().then(() => {
+              resolve(qrCodeMessage);
+            });
+          }
+        ).catch(err => {
+          console.error("Error start camera:", err);
+          reject(err);
         });
-      },
-      errorMessage => {
-        // ignorar errors de lectura
-      }
-    ).catch(err => {
-      console.error("Error iniciant càmera:", err);
-      reject(err);
-    });
+
+      })
+      .catch(err => {
+        console.error("Error getCameras:", err);
+        reject(err);
+      });
 
   });
 }
-
-
 
 
 function afegirFilaTaula(codi1, codi2) {
