@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="estils.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
+
 
   <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
@@ -35,6 +38,14 @@
 </div>
 
 <script src="app.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("Service Worker registrat"))
+    .catch(err => console.log("Error SW:", err));
+}
+</script>
+
 
 </body>
 </html>
