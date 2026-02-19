@@ -30,22 +30,28 @@ async function initCameras() {
 }
 
 /* ---------- START SCANNER ---------- */
-
 function startScanner() {
   return new Promise(async (resolve, reject) => {
-
     try {
-
+      // Inicialitzar càmeres si cal
       if (!cameras.length) {
         await initCameras();
       }
 
+      // Inicialitzar Html5QrCode si cal
       if (!html5QrCode) {
         html5QrCode = new Html5Qrcode("reader");
       }
 
+      // Parar scanner si ja està actiu
+      if (html5QrCode.isScanning) {
+        await html5QrCode.stop();
+      }
+
+      // Seleccionar la càmera actual
       const cameraId = cameras[currentCameraIndex].id;
 
+      // Iniciar scanner
       await html5QrCode.start(
         cameraId,
         {
@@ -53,18 +59,21 @@ function startScanner() {
           qrbox: 260
         },
         async (qrCodeMessage) => {
+          // Quan detecta QR → parar i resoldre Promise
           await html5QrCode.stop();
           resolve(qrCodeMessage);
         },
-        () => {}
+        () => {
+          // ignorar errors de lectura
+        }
       );
 
     } catch (err) {
       reject(err);
     }
-
   });
 }
+
 
 /* ---------- CANVIAR CÀMERA ---------- */
 
@@ -75,31 +84,19 @@ async function switchCamera() {
       await initCameras();
     }
 
-    if (html5QrCode && html5QrCode.isScanning) {
-      await html5QrCode.stop();
-    }
-
+    // Només canviem l’índex
     currentCameraIndex =
       (currentCameraIndex + 1) % cameras.length;
 
-    const cameraId = cameras[currentCameraIndex].id;
-
-    await html5QrCode.start(
-      cameraId,
-      {
-        fps: 15,
-        qrbox: 260
-      },
-      () => {},
-      () => {}
+    console.log("Nova càmera seleccionada:",
+      cameras[currentCameraIndex].label
     );
-
-    console.log("Càmera activa:", cameras[currentCameraIndex].label);
 
   } catch (err) {
     console.error("Error canviant càmera:", err);
   }
 }
+
 
 /* ---------- TAULA ---------- */
 
