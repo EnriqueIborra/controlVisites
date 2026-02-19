@@ -16,25 +16,28 @@
 
 <body>
 <div class="container">
-  <!-- botons, reader i taula -->
-<button id="switchCameraBtn">Canviar càmera</button>
-<button id="scanBtn1">Escanejar QR 1</button>
-<button id="scanBtn2">Escanejar QR 2</button>
+    <!-- botons, reader i taula -->
+  <button id="switchCameraBtn">Canviar càmera</button>
+  <button id="scanBtn1">Escanejar QR 1</button>
+  <button id="scanBtn2">Escanejar QR 2</button>
 
-<div id="reader" style="width:300px; margin-top:20px;"></div>
+   <div id="reader" style="width:300px; margin-top:20px;"></div>
 
-<h3>Resultats</h3>
-<table border="1" id="resultTable">
-  <thead>
-    <tr>
-      <th>QR 1</th>
-      <th>QR 2</th>
-      <th>Data / Hora</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
+ <h3>Resultats</h3>
+   <div class="table-container"></div>
+    <table border="1" id="resultTable">
+      <thead>
+        <tr>
+          <th>QR 1</th>
+          <th>QR 2</th>
+          <th>Data / Hora</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    </div>
+
 </div>
 
 <script src="app.js"></script>

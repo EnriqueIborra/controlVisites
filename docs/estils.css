@@ -73,3 +73,27 @@ th, td {
   max-width: none;
   margin: 20px auto;
 }
+
+
+/* Contenidor de taula */
+.table-container {
+  max-height: 50vh; /* ocupa la meitat de la pantalla */
+  overflow-y: auto;
+  margin-top: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+/* Taula dins del contenidor */
+#resultTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#resultTable th,
+#resultTable td {
+  padding: 8px;
+  text-align: left;
+  word-break: break-word;
+}
