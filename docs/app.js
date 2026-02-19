@@ -1,80 +1,107 @@
 let qr1 = null;
 let qr2 = null;
 
-/* function startScanner() {
-  return new Promise((resolve, reject) => {
-    const html5QrCode = new Html5Qrcode("reader");
+let html5QrCode = null;
+let cameras = [];
+let currentCameraIndex = 0;
 
-    Html5Qrcode.getCameras()
-      .then(devices => {
-        if (devices && devices.length) {
-          const cameraId = devices[0].id;
+/* ---------- INICIALITZAR CÀMERES ---------- */
 
-          html5QrCode.start(
-            cameraId,
-            { fps: 10, qrbox: 250 },
-            qrCodeMessage => {
-              html5QrCode.stop().then(() => {
-                resolve(qrCodeMessage);
-              });
-            }
-          );
-        } else {
-          reject("No hi ha càmera");
-        }
-      })
-      .catch(err => reject(err));
-  });
-} */
+async function initCameras() {
+  cameras = await Html5Qrcode.getCameras();
+
+  if (!cameras || cameras.length === 0) {
+    throw "No hi ha càmeres disponibles";
+  }
+
+  // Intentem seleccionar trasera per defecte
+  const backIndex = cameras.findIndex(device =>
+    device.label.toLowerCase().includes("back") ||
+    device.label.toLowerCase().includes("rear") ||
+    device.label.toLowerCase().includes("environment")
+  );
+
+  if (backIndex !== -1) {
+    currentCameraIndex = backIndex;
+  } else {
+    // En iPhone sovint l’última és la trasera
+    currentCameraIndex = cameras.length - 1;
+  }
+}
+
+/* ---------- START SCANNER ---------- */
 
 function startScanner() {
-  return new Promise((resolve, reject) => {
-    const html5QrCode = new Html5Qrcode("reader");
+  return new Promise(async (resolve, reject) => {
 
-    Html5Qrcode.getCameras()
-      .then(devices => {
+    try {
 
-        if (!devices || devices.length === 0) {
-          reject("No hi ha càmera");
-          return;
-        }
+      if (!cameras.length) {
+        await initCameras();
+      }
 
-        // 🔍 Intentem trobar la càmera trasera pel nom
-        let backCamera = devices.find(device =>
-          device.label.toLowerCase().includes("back") ||
-          device.label.toLowerCase().includes("rear") ||
-          device.label.toLowerCase().includes("environment")
-        );
+      if (!html5QrCode) {
+        html5QrCode = new Html5Qrcode("reader");
+      }
 
-        // 📱 En iPhone sovint l'última és la trasera
-        const cameraId = backCamera
-          ? backCamera.id
-          : devices[devices.length - 1].id;
+      const cameraId = cameras[currentCameraIndex].id;
 
-        html5QrCode.start(
-          cameraId,
-          {
-            fps: 15,
-            qrbox: 260
-          },
-          qrCodeMessage => {
-            html5QrCode.stop().then(() => {
-              resolve(qrCodeMessage);
-            });
-          },
-          errorMessage => {
-            // ignorar errors de lectura
-          }
-        ).catch(err => {
-          reject("Error iniciant càmera: " + err);
-        });
+      await html5QrCode.start(
+        cameraId,
+        {
+          fps: 15,
+          qrbox: 260
+        },
+        async (qrCodeMessage) => {
+          await html5QrCode.stop();
+          resolve(qrCodeMessage);
+        },
+        () => {}
+      );
 
-      })
-      .catch(err => reject("Error obtenint càmeres: " + err));
+    } catch (err) {
+      reject(err);
+    }
+
   });
 }
 
+/* ---------- CANVIAR CÀMERA ---------- */
 
+async function switchCamera() {
+  try {
+
+    if (!cameras.length) {
+      await initCameras();
+    }
+
+    if (html5QrCode && html5QrCode.isScanning) {
+      await html5QrCode.stop();
+    }
+
+    currentCameraIndex =
+      (currentCameraIndex + 1) % cameras.length;
+
+    const cameraId = cameras[currentCameraIndex].id;
+
+    await html5QrCode.start(
+      cameraId,
+      {
+        fps: 15,
+        qrbox: 260
+      },
+      () => {},
+      () => {}
+    );
+
+    console.log("Càmera activa:", cameras[currentCameraIndex].label);
+
+  } catch (err) {
+    console.error("Error canviant càmera:", err);
+  }
+}
+
+/* ---------- TAULA ---------- */
 
 function afegirFilaTaula(codi1, codi2) {
   const table = document
@@ -90,12 +117,8 @@ function afegirFilaTaula(codi1, codi2) {
   cell1.textContent = codi1;
   cell2.textContent = codi2;
 
-  // 📅 Data i hora actual
   const ara = new Date();
-  const dataHoraFormatejada = ara.toLocaleString(); 
-  // Exemple: 17/2/2026, 18:42:31
-
-  cell3.textContent = dataHoraFormatejada;
+  cell3.textContent = ara.toLocaleString();
 
   novaFila.appendChild(cell1);
   novaFila.appendChild(cell2);
@@ -104,28 +127,40 @@ function afegirFilaTaula(codi1, codi2) {
   table.appendChild(novaFila);
 }
 
+/* ---------- BOTONS ---------- */
 
 // Botó 1
 document.getElementById("scanBtn1").addEventListener("click", async () => {
-  qr1 = await startScanner();
-  console.log("QR1:", qr1);
-  comprovarICrearFila();
+  try {
+    qr1 = await startScanner();
+    console.log("QR1:", qr1);
+    comprovarICrearFila();
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 // Botó 2
 document.getElementById("scanBtn2").addEventListener("click", async () => {
-  qr2 = await startScanner();
-  console.log("QR2:", qr2);
-  comprovarICrearFila();
+  try {
+    qr2 = await startScanner();
+    console.log("QR2:", qr2);
+    comprovarICrearFila();
+  } catch (e) {
+    console.error(e);
+  }
 });
+
+// Botó Canviar Càmera
+document.getElementById("switchCameraBtn")
+  .addEventListener("click", switchCamera);
+
+/* ---------- CONTROL FILA ---------- */
 
 function comprovarICrearFila() {
   if (qr1 && qr2) {
     afegirFilaTaula(qr1, qr2);
-
-    // Reiniciem per a la següent parella
     qr1 = null;
     qr2 = null;
   }
 }
-
