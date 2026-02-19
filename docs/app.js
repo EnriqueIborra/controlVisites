@@ -6,24 +6,27 @@ function startScanner() {
     const html5QrCode = new Html5Qrcode("reader");
 
     html5QrCode.start(
-      { facingMode: "environment" }, // 👈 càmera trasera
+      {        
+      facingMode: "environment",
+      width: { ideal: 1280 },
+      height: { ideal: 720 }
+      },
       {
-        fps: 10,
-        qrbox: { width: 250, height: 250 }
+        fps: 20, // 👈 més intents per segon
+        qrbox: { width: 300, height: 300 }, // 👈 zona més gran
+        aspectRatio: 1.0,
+        disableFlip: false
       },
       qrCodeMessage => {
         html5QrCode.stop().then(() => {
+          navigator.vibrate?.(200); // vibració en mòbil (opcional)
           resolve(qrCodeMessage);
         });
-      },
-      errorMessage => {
-        // ignorar errors de lectura
       }
-    ).catch(err => {
-      reject("Error accedint a la càmera: " + err);
-    });
+    ).catch(err => reject(err));
   });
 }
+
 
 
 function afegirFilaTaula(codi1, codi2) {
@@ -78,4 +81,7 @@ function comprovarICrearFila() {
     qr2 = null;
   }
 }
+
+
+
 
