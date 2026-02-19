@@ -1,48 +1,31 @@
 let qr1 = null;
 let qr2 = null;
 
-
 function startScanner() {
   return new Promise((resolve, reject) => {
-
-    const readerId = "reader";
-    const html5QrCode = new Html5Qrcode(readerId);
+    const html5QrCode = new Html5Qrcode("reader");
 
     Html5Qrcode.getCameras()
-      .then(cameras => {
-        if (!cameras || cameras.length === 0) {
-          reject("No hi ha càmeres");
-          return;
+      .then(devices => {
+        if (devices && devices.length) {
+          const cameraId = devices[0].id;
+
+          html5QrCode.start(
+            cameraId,
+            { fps: 10, qrbox: 250 },
+            qrCodeMessage => {
+              html5QrCode.stop().then(() => {
+                resolve(qrCodeMessage);
+              });
+            }
+          );
+        } else {
+          reject("No hi ha càmera");
         }
-
-        // 🔍 iPhone: normalment l’última és la trasera
-        const cameraId = cameras[cameras.length - 1].id;
-
-        html5QrCode.start(
-          cameraId,
-          {
-            fps: 15,
-            qrbox: 260
-          },
-          qrCodeMessage => {
-            html5QrCode.stop().then(() => {
-              resolve(qrCodeMessage);
-            });
-          }
-        ).catch(err => {
-          console.error("Error start camera:", err);
-          reject(err);
-        });
-
       })
-      .catch(err => {
-        console.error("Error getCameras:", err);
-        reject(err);
-      });
-
+      .catch(err => reject(err));
   });
 }
-
 
 function afegirFilaTaula(codi1, codi2) {
   const table = document
@@ -96,7 +79,4 @@ function comprovarICrearFila() {
     qr2 = null;
   }
 }
-
-
-
 
