@@ -53,6 +53,13 @@ button {
   cursor: pointer;
 }
 
+/* Estat actiu: botó verd */
+button.active {
+  background-color: #4CAF50 !important; /* verd */
+  color: white !important;
+}
+
+
 /* Taula responsive */
 table {
   width: 100%;
@@ -69,7 +76,7 @@ th, td {
 
 #reader {
   width: 100% !important;
-  height: 40vh; /* abans 60vh */
+  height: 50vh; /* abans 60vh */
   max-width: none;
   margin: 10px auto; /* menys marge */
 }

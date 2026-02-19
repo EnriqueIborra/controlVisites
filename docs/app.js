@@ -128,7 +128,7 @@ function afegirFilaTaula(codi1, codi2) {
 /* ---------- BOTONS ---------- */
 
 // Botó 1
-document.getElementById("scanBtn1").addEventListener("click", async () => {
+/* document.getElementById("scanBtn1").addEventListener("click", async () => {
   try {
     qr1 = await startScanner();
     console.log("QR1:", qr1);
@@ -149,6 +149,38 @@ document.getElementById("scanBtn2").addEventListener("click", async () => {
   }
 });
 
+ */
+// Botó 1
+document.getElementById("scanBtn1").addEventListener("click", async () => {
+  try {
+    qr1 = await startScanner();
+    console.log("QR1:", qr1);
+
+    // Canviem color a verd
+    document.getElementById("scanBtn1").classList.add("active");
+
+    comprovarICrearFila();
+  } catch (e) {
+    console.error(e);
+  }
+});
+
+// Botó 2
+document.getElementById("scanBtn2").addEventListener("click", async () => {
+  try {
+    qr2 = await startScanner();
+    console.log("QR2:", qr2);
+
+    // Canviem color a verd
+    document.getElementById("scanBtn2").classList.add("active");
+
+    comprovarICrearFila();
+  } catch (e) {
+    console.error(e);
+  }
+});
+
+
 // Botó Canviar Càmera
 document.getElementById("switchCameraBtn")
   .addEventListener("click", switchCamera);
@@ -158,6 +190,11 @@ document.getElementById("switchCameraBtn")
 function comprovarICrearFila() {
   if (qr1 && qr2) {
     afegirFilaTaula(qr1, qr2);
+    // Tornem els botons al color original
+    document.getElementById("scanBtn1").classList.remove("active");
+    document.getElementById("scanBtn2").classList.remove("active");
+
+    // Reiniciem variables
     qr1 = null;
     qr2 = null;
   }
