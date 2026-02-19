@@ -108,7 +108,7 @@ th, td {
 
 
 button.delete-btn {
-  background-color: #f44336;
+  background-color: #13ce70;
   color: white;
   border: none;
   padding: 5px 10px;
@@ -117,5 +117,5 @@ button.delete-btn {
 }
 
 button.delete-btn:hover {
-  background-color: #cc5353;
+  background-color: #4781b7;
 }
