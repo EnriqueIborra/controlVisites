@@ -3,29 +3,32 @@ let qr2 = null;
 
 function startScanner() {
   return new Promise((resolve, reject) => {
+
     const html5QrCode = new Html5Qrcode("reader");
 
     html5QrCode.start(
-      {        
-      facingMode: "environment",
-      width: { ideal: 1280 },
-      height: { ideal: 720 }
-      },
+      { facingMode: "environment" }, // només això
       {
-        fps: 20, // 👈 més intents per segon
-        qrbox: { width: 300, height: 300 }, // 👈 zona més gran
-        aspectRatio: 1.0,
-        disableFlip: false
+        fps: 15,
+        qrbox: 280
       },
       qrCodeMessage => {
         html5QrCode.stop().then(() => {
-          navigator.vibrate?.(200); // vibració en mòbil (opcional)
+          navigator.vibrate?.(200);
           resolve(qrCodeMessage);
         });
+      },
+      errorMessage => {
+        // ignorar errors de lectura
       }
-    ).catch(err => reject(err));
+    ).catch(err => {
+      console.error("Error iniciant càmera:", err);
+      reject(err);
+    });
+
   });
 }
+
 
 
 
