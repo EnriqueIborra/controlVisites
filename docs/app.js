@@ -122,6 +122,7 @@ function afegirFilaTaula(codi1, codi2) {
   novaFila.appendChild(cell3);
 
   table.appendChild(novaFila);
+    novaFila.scrollIntoView({ behavior: "smooth", block: "end" });
 }
 
 /* ---------- BOTONS ---------- */
