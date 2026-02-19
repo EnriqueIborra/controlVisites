@@ -100,7 +100,7 @@ async function switchCamera() {
 
 /* ---------- TAULA ---------- */
 
-function afegirFilaTaula(codi1, codi2) {
+/* function afegirFilaTaula(codi1, codi2) {
   const table = document
     .getElementById("resultTable")
     .querySelector("tbody");
@@ -124,32 +124,56 @@ function afegirFilaTaula(codi1, codi2) {
   table.appendChild(novaFila);
     novaFila.scrollIntoView({ behavior: "smooth", block: "end" });
 }
+ */
+
+function afegirFilaTaula(codi1, codi2) {
+  const tableBody = document.getElementById("resultTable").querySelector("tbody");
+  const novaFila = document.createElement("tr");
+
+  // Cel·les QR1 i QR2
+  const cell1 = document.createElement("td");
+  const cell2 = document.createElement("td");
+  const cell3 = document.createElement("td");
+  const cell4 = document.createElement("td"); // Cel·la del botó esborrar
+
+  cell1.textContent = codi1;
+  cell2.textContent = codi2;
+  cell3.textContent = new Date().toLocaleString();
+
+  // Botó esborrar
+  const btnEsborrar = document.createElement("button");
+  btnEsborrar.textContent = "Esborrar";
+  btnEsborrar.style.backgroundColor = "#f44336"; // vermell
+  btnEsborrar.style.color = "white";
+  btnEsborrar.style.border = "none";
+  btnEsborrar.style.padding = "5px 10px";
+  btnEsborrar.style.borderRadius = "5px";
+  btnEsborrar.style.cursor = "pointer";
+  
+  btnEsborrar.classList.add("delete-btn");
+
+  // Event listener: esborra la fila
+  btnEsborrar.addEventListener("click", () => {
+    novaFila.remove();
+  });
+
+  cell4.appendChild(btnEsborrar);
+
+  novaFila.appendChild(cell1);
+  novaFila.appendChild(cell2);
+  novaFila.appendChild(cell3);
+  novaFila.appendChild(cell4);
+
+  tableBody.appendChild(novaFila);
+
+  // Scroll automàtic a la fila nova
+  novaFila.scrollIntoView({ behavior: "smooth", block: "end" });
+}
+
+
 
 /* ---------- BOTONS ---------- */
 
-// Botó 1
-/* document.getElementById("scanBtn1").addEventListener("click", async () => {
-  try {
-    qr1 = await startScanner();
-    console.log("QR1:", qr1);
-    comprovarICrearFila();
-  } catch (e) {
-    console.error(e);
-  }
-});
-
-// Botó 2
-document.getElementById("scanBtn2").addEventListener("click", async () => {
-  try {
-    qr2 = await startScanner();
-    console.log("QR2:", qr2);
-    comprovarICrearFila();
-  } catch (e) {
-    console.error(e);
-  }
-});
-
- */
 // Botó 1
 document.getElementById("scanBtn1").addEventListener("click", async () => {
   try {
@@ -199,3 +223,5 @@ function comprovarICrearFila() {
     qr2 = null;
   }
 }
+
+
